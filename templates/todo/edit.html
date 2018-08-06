@@ -1,0 +1,67 @@
+<html>
+   <head>
+      <link rel = "stylesheet" 
+         href = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+      <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js">
+      </script>
+      <link rel = "stylesheet" 
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      
+      <style> 
+         .graybox {
+            background-color:#ddd;
+         }
+      </style>
+   </head>
+<body>
+    
+    <div class = "mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class = "mdl-layout__header">
+                <div class = "mdl-layout__header-row">      
+                        <a href="/todo" style="text-decoration:none;color:white"><span class = "mdl-layout-title"><h4>TODO - RPA</h4></a>
+                    </span>          
+                </div>       
+            </header>
+
+            <main class = "mdl-layout__content">    
+             <div class = "mdl-grid">
+                <div class = "mdl-cell--12-col mdl-cell--12-col-tablet ">
+                    <h5></h5><br><br>
+                        <center>
+                            <div class = "square-card mdl-card mdl-shadow--2dp">
+                                    <h5>Edit TODO</h5>
+                                    <form action="." method="post">
+                                            {% csrf_token %}
+                                            
+                                    <table>
+                                            {% for todo in todo_data %}
+                                            <tr>
+                                                <td>
+                                                    <input type = "text" value="{{ todo.id }}" name = "id" hidden/>
+                                                    Enter Title:
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" name="title" value="{{ todo.todo_title }}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Enter Note:</td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" name="todo" value="{{ todo.todo_note }}"/></td>
+                                            </tr>
+                                            <tr>
+                                                    <td><input type='submit' name='add' value='Save'><a href="/todo"><input type='submit' name='add' value='New'></a></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                        </form>
+                                <h4></h4>
+                            </div>
+                        </center>                                                        
+                </div>
+           </div>
+        </main>
+    </div>
+</body>
+</html>

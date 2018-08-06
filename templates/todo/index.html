@@ -1,0 +1,165 @@
+<html>
+   <head>
+      <link rel = "stylesheet" href = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+      <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+      <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+      <style> 
+         .graybox {
+            background-color:#ddd;
+         }
+      </style>
+   </head>
+<body>
+    <div class = "mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class = "mdl-layout__header">
+                <div class = "mdl-layout__header-row">      
+                    <span class = "mdl-layout-title">TODO - RPA</span>          
+                </div>       
+            </header>
+    
+            <main class = "mdl-layout__content">    
+             <div class = "mdl-grid">
+                <div class = "mdl-cell--4-col mdl-cell--12-col-tablet ">
+                        <div class = "square-card mdl-card mdl-shadow--2dp">
+                            <center>
+                                {% if todo_data == NULL %}
+                                    <h5>Add TODO</h5>
+                                {% else %}
+                                    <h5>Edit TODO</h5>
+                                {% endif %}
+
+
+                                <h6><span> {{ error }}</span></h6>
+                                <table>
+
+                                        {% for todo in todo_data %}
+                                        <tr>
+                                            <td>
+                                                 <input type = "text" value="{{ todo.id }}" id = "id" hidden/>
+                                                Enter Title:
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type='text' name='title' id="title" value ='{{ todo.todo_title }}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Enter Note:</td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type='text' name='todo' id="note" value = '{{ todo.todo_note }}' /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                    <button id="updateTodo">Update</button>
+                                                    <a href="/todo"><button>New</button></a>
+
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% if todo_data == NULL %}
+                                        <tr>
+                                                <td>Enter Title:</td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type='text' name='title' id="title" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Enter Note:</td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type='text' name='todo' id="note" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button id = "addTodo">Add</button>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+
+                                </table>
+                            </center>   
+                            <h4></h4>
+                        </div>                                                     
+                </div>
+                <div class = "mdl-cell--8-col mdl-cell--12-col-tablet">
+                    <table class = "mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                            <thead>
+                                <tr>
+                                    <th class = "mdl-data-table__cell--non-numeric">Title</th>
+                                    <th>Description</th>
+                                    <th>Date Modified</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                            {% for todo in all_todos %}
+                                <tr>
+                                    <td class = "mdl-data-table__cell--non-numeric">{{ todo.todo_title }} </td>
+                                    <td>{{ todo.todo_note }}</td>
+                                    <td>{{ todo.todo_date }}</td>
+                                    <td>                                    
+                                            <a href="/todo/{{ todo.id }}" style="text-decoration:none;"><input type='submit' value='Edit'/></a>
+                                            <a href="/todo/delete/{{ todo.id }}" style="text-decoration:none;"><input type='submit' value='Delete'/></a>
+                                            <!--<input type='submit' name='add' value='Edit'>-->
+                                            <!--<input type='submit' name='add' value='Delete' id="delete{{ todo.id }}"/>-->
+                                            <!--<button name="add" id="delete{{ todo.id }}">Delete</button>-->
+                                            <!--<label for="delete{{ todo.id }}" style="cursor:pointer">Delete</label>-->
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                     </table>                                              
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+<script>
+
+    $("#addTodo").click(function(){
+        var title = $('#title').val();
+        var note = $('#note').val();
+        var todoData = {
+        "title" : title,
+        "note"  : note,
+        };        
+        var params = JSON.stringify(todoData);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                location.reload();
+                document.getElementById("title").value = "";
+                document.getElementById("note").value = "";
+            }
+        };
+        xhttp.open("POST", "addTodo", true);
+        xhttp.send(params);
+    });
+
+    $("#updateTodo").click(function(){
+        var title = $('#title').val();
+        var note = $('#note').val();
+        var id = $('#id').val();
+        var todoData = {
+        "title" : title,
+        "note"  : note,
+        "id"    : id,
+        };        
+        var params = JSON.stringify(todoData);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                location.reload();
+                document.getElementById("title").value = "";
+                document.getElementById("note").value = "";
+            }
+        };
+        xhttp.open("POST", "update" , true);
+        xhttp.send(params);
+    });
+
+</script>
+</html>
